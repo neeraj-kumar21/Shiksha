@@ -1,21 +1,27 @@
 # Python
+
 .venv/
 venv/
-__pycache__/
-*.pyc
+**pycache**/
+*.py[cod]
 
 # Environment secrets
+
 .env
 .env.*
+!.env.example
 
 # Flutter
+
 .dart_tool/
 build/
 
 # IDE
+
 .vscode/
 .idea/
 
 # OS
+
 .DS_Store
 Thumbs.db
