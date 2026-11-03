@@ -1,27 +1,25 @@
-# Python
-
-.venv/
-venv/
-**pycache**/
-*.py[cod]
-
-# Environment secrets
-
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
 
-# Flutter
+# Python virtual environments
+.venv/
+venv/
+env/
 
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Flutter generated files
 .dart_tool/
 build/
 
 # IDE
-
 .vscode/
 .idea/
 
 # OS
-
 .DS_Store
 Thumbs.db
