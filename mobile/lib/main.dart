@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math ;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const ShikshaApp());
 
@@ -14,19 +15,58 @@ const green = Color(0xFF1FB57A);
 const orange = Color(0xFFFF9C3A);
 const grad = LinearGradient(colors: [blue, violet]);
 
+// ---------- APP SETTINGS ----------
+
+final ValueNotifier<bool> appDarkMode = ValueNotifier<bool>(true);
+
+final ValueNotifier<bool> appSoundEffects = ValueNotifier<bool>(true);
+
+void playAppSound() {
+  if (appSoundEffects.value) {
+    SystemSound.play(SystemSoundType.click);
+  }
+}
+
+
 class ShikshaApp extends StatelessWidget {
   const ShikshaApp({super.key});
+
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Shiksha',
-        theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: bg,
-          colorScheme: ColorScheme.fromSeed(seedColor: blue, brightness: Brightness.dark),
-        ),
-        home: const SplashScreen(),
-      );
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: appDarkMode,
+      builder: (context, isDark, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Shiksha',
+
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: const Color(0xFFF5F7FF),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: blue,
+              brightness: Brightness.light,
+            ),
+          ),
+
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: bg,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: blue,
+              brightness: Brightness.dark,
+            ),
+          ),
+
+          themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+
+          home: const SplashScreen(),
+        );
+      },
+    );
+  }
 }
 
 // ---------- REUSABLE WIDGETS ----------

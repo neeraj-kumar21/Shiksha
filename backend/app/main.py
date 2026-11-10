@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from google import genai
+from app.database import engine
+from app.models import Base
+from app.auth import router as auth_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # Load environment variables from backend/.env
@@ -15,12 +19,25 @@ load_dotenv(
        override=True,
 )
 
+Base.metadata.create_all(bind=engine)
+
 # Initialize FastAPI application
 app = FastAPI(
+    
     title="SHIKSHA API",
     description="Student Learning, Assessment & Career Guidance Platform",
     version="1.0.0",
 )
+
+#add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5000"],  # Adjust this in production for security
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth_router)  # Include the auth router for authentication endpoints
 
 
 # Define request model
@@ -95,7 +112,8 @@ def ask_question(request: AskRequest):
             "Use simple language, and show steps for academic questions. \n \n"
             f"Student's question: {request.question}"
         )
-
+        
+        response = generate_with_pool(prompt)
         answer = response.text
 
         if not answer:
